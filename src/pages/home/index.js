@@ -1,11 +1,20 @@
-import Link from 'next/link'
-import Head from 'next/head'
-import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
+import Link from 'next/link'
+import Swal from 'sweetalert2'
+import { useState } from 'react'
+
 export default function Home({ siniestros }) {
     const router = useRouter()
     const ente = router.query.ente
-    const alerta = () => {
+    const prioridad = ['Alta', 'Media', 'Baja']
+    const [mensaje, setMensaje] = useState('')
+    const [correo, setCorreo] = useState('')
+    const [info, setInfo] = useState({
+        mensaje,
+        correo,
+    })
+    const alerta = (email) => {
         Swal.fire({
             title: 'Acción',
             text: '¿Qué desea hacer?',
@@ -14,6 +23,23 @@ export default function Home({ siniestros }) {
             confirmButtonText: 'Aceptar',
             showCancelButton: true,
             cancelButtonText: 'Denegar',
+        }).then((result) => {
+            setCorreo(email)
+            if (result.isConfirmed) {
+                setMensaje('El siniestro fue visto y pronto será atendido')
+            } else {
+                setMensaje('El siniestro fue visto y ha sido rechazado')
+            }
+            setInfo({ mensaje, correo })
+            console.log(info)
+            fetch('http://localhost:3000/api/contact', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(info),
+            })
         })
     }
     return (
@@ -31,25 +57,26 @@ export default function Home({ siniestros }) {
                     <div className="mt-8">
                         <img
                             className="h-12 w-12 rounded-full object-cover"
-                            src="https://appzzang.me/data/editor/1608/f9c387cb6bd7a0b004f975cd92cbe2d9_1471626325_6802.png"
-                            alt="enoshima profile"
+                            src={'/' + ente + '.jpg'}
                         />
                         <h2 className="mt-4 text-xl font-extrabold">
                             Bienvenido {ente}
                         </h2>
                     </div>
                     <div className="mt-auto flex items-center text-bloodRed">
-                        <a href="#home" className="flex items-center">
-                            <svg
-                                className="fill-current h-5 w-5"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"></path>
-                            </svg>
-                            <span className="ml-2 font-medium">
-                                Cerrar Sesión
-                            </span>
-                        </a>
+                        <Link href="/login">
+                            <a className="flex items-center">
+                                <svg
+                                    className="fill-current h-5 w-5"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"></path>
+                                </svg>
+                                <span className="ml-2 font-medium">
+                                    Cerrar Sesión
+                                </span>
+                            </a>
+                        </Link>
                     </div>
                 </nav>
                 <main className="flex-1 flex flex-col bg-cultured transition duration-500 ease-in-out overflow-y-auto">
@@ -137,14 +164,24 @@ export default function Home({ siniestros }) {
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="mt-2 text-center text-carnelian">
-                                                    {siniestro.prioridad}
+                                                    {
+                                                        prioridad[
+                                                            Number(
+                                                                siniestro.prioridad
+                                                            ) - 1
+                                                        ]
+                                                    }
                                                 </span>
                                             </div>
                                             <div className="flex flex-col">
                                                 <div className="contenedorBoton">
                                                     <button
                                                         className="btn"
-                                                        onClick={() => alerta()}
+                                                        onClick={() =>
+                                                            alerta(
+                                                                siniestro.correo
+                                                            )
+                                                        }
                                                     >
                                                         Acción
                                                     </button>

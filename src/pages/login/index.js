@@ -38,20 +38,21 @@ export default function login() {
                                 <div className="logo">eStreet</div>
                             </a>
                         </Link>
-                        <div className="mt-8 border-t border-imperialRed">
-                            <Link href="/consejos">
-                                <a className="elementosSideBar">Consejos</a>
-                            </Link>
-                        </div>
                     </div>
-                    <div
-                        className="flex items-center w-full"
-                        style={{ backgroundImage: 'url("../background.png")' }}
-                    >
+                    <div className="flex items-center w-full">
                         <div className="grid justify-items-center w-full">
+                            <h2 className="logo">Bienvenido a eStreet</h2>
+                            <p className="text-richBlackFogra">
+                                Aquí como ente estatal de la ciudad de Pereira
+                                podrás ver siniestros que reportan los
+                                cuidadanos y determinar si serán atendidos
+                            </p>
                             <form onSubmit={handleLogin} className="w-full">
                                 <div className="flex-grow">
                                     <div className="contenedorInputs">
+                                        <label className="font-semibold text-richBlackFogra py-2">
+                                            Digite sus credenciales
+                                        </label>
                                         <div className="contenedorInput">
                                             <input
                                                 type="password"
@@ -66,6 +67,9 @@ export default function login() {
                                     </div>
                                 </div>
                             </form>
+                            <div className="absolute bottom-0 right-0">
+                                <img src="/pereira-capital-del-eje-logo.png" />
+                            </div>
                         </div>
                     </div>
                 </div>
