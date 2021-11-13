@@ -5,8 +5,8 @@ export default function (req, res) {
         port: 465,
         host: 'smtp.gmail.com',
         auth: {
-            user: 'jhonatan.cardona@ucp.edu.co',
-            pass: 'jhona1999',
+            user: '********',
+            pass: '*****',
         },
         secure: true,
     })
